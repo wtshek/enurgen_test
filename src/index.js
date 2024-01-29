@@ -1,29 +1,18 @@
 const express = require("express");
-const multer = require("multer");
 const extractRectCoordRoute = require("./routes/extractRectCoord.routes");
 
 // NOTE: nodejs doesn't openCV imread require HTMLImageElement | HTMLCanvasElement,
 // so need to set up a dom and canvas to interact with the elements
 const { JSDOM } = require("jsdom");
 const { Canvas, Image, ImageData, loadImage } = require("canvas");
+const {
+  imageUploadMiddleware,
+} = require("./middleware/extractRectCoord.middleware");
 
 const app = express();
 const PORT = process.env.PORT || 3000;
-const upload = multer({
-  storage: multer.memoryStorage(),
-  fileFilter: (req, file, callback) => {
-    const filetypes = /png/;
-    const mimetype = filetypes.test(file.mimetype);
 
-    if (mimetype) {
-      return callback(null, true);
-    }
-
-    callback("Only PNG files are allowed");
-  },
-});
-
-app.use("/extract-rect-coords", upload.single("image"), extractRectCoordRoute);
+app.use("/extract-rect-coords", imageUploadMiddleware, extractRectCoordRoute);
 
 function loadOpenCV() {
   return new Promise((resolve) => {
@@ -50,3 +39,5 @@ app.listen(PORT, async () => {
   await loadOpenCV();
   console.log(`Server is running on http://localhost:${PORT}`);
 });
+
+module.exports = app;
