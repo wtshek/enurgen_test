@@ -16,13 +16,14 @@ const upload = multer({
   },
 }).single("image");
 
-function imageUploadMiddleware(req, res) {
+function imageUploadMiddleware(req, res, next) {
   upload(req, res, function (err) {
     if (err instanceof multer.MulterError) {
       return res.status(500).send("Internal Server error");
     } else if (err) {
       return res.status(400).send(err);
     }
+    next();
   });
 }
 

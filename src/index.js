@@ -10,7 +10,7 @@ const {
 } = require("./middleware/extractRectCoord.middleware");
 
 const app = express();
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || process.env.isTest ? 3001 : 3000;
 
 app.use("/extract-rect-coords", imageUploadMiddleware, extractRectCoordRoute);
 
