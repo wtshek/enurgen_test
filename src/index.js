@@ -19,18 +19,14 @@ app.post("/extract-rect-coords", upload.single("image"), async (req, res) => {
   try {
     const image = await loadImage(req.file.buffer);
 
-    // Load the image
     const img = cv.imread(image);
 
-    // Convert the image to grayscale
     const gray = new cv.Mat();
     cv.cvtColor(img, gray, cv.COLOR_RGBA2GRAY);
 
-    // Threshold the image to obtain a binary image
     const thresh = new cv.Mat();
     cv.threshold(gray, thresh, 0, 255, cv.THRESH_BINARY_INV);
 
-    // Find contours in the binary image
     const contours = new cv.MatVector();
     const hierarchy = new cv.Mat();
     cv.findContours(
@@ -67,7 +63,6 @@ app.post("/extract-rect-coords", upload.single("image"), async (req, res) => {
   }
 });
 
-// Load opencv.js just like before but using Promise instead of callbacks:
 function loadOpenCV() {
   return new Promise((resolve) => {
     global.Module = {
@@ -76,6 +71,7 @@ function loadOpenCV() {
     global.cv = require("opencv.js");
   });
 }
+
 // Using jsdom and node-canvas we define some global variables to emulate HTML DOM.
 // only define those globals used by cv.imread()
 function installDOM() {
@@ -88,7 +84,6 @@ function installDOM() {
 }
 
 app.listen(PORT, async () => {
-  // before loading opencv.js we emulate a minimal HTML DOM
   installDOM();
   await loadOpenCV();
   console.log(`Server is running on http://localhost:${PORT}`);
