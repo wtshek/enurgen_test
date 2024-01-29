@@ -9,7 +9,19 @@ const { Canvas, Image, ImageData, loadImage } = require("canvas");
 
 const app = express();
 const PORT = process.env.PORT || 3000;
-const upload = multer({ storage: multer.memoryStorage() });
+const upload = multer({
+  storage: multer.memoryStorage(),
+  fileFilter: (req, file, callback) => {
+    const filetypes = /png/;
+    const mimetype = filetypes.test(file.mimetype);
+
+    if (mimetype) {
+      return callback(null, true);
+    }
+
+    callback("Only PNG files are allowed");
+  },
+});
 
 app.use("/extract-rect-coords", upload.single("image"), extractRectCoordRoute);
 

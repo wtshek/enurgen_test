@@ -2,6 +2,10 @@ const { loadImage } = require("canvas");
 
 const extractRectCoord = async (req, res) => {
   try {
+    if (!req.file || !req.file.buffer) {
+      return res.status(400).send("Image required");
+    }
+
     const image = await loadImage(req.file.buffer);
 
     const img = cv.imread(image);
