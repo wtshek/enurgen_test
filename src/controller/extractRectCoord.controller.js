@@ -1,5 +1,31 @@
 const { loadImage } = require("canvas");
 
+/**
+ * Extracts the coordinates of the bounding rectangles of the contours in the given image.
+ *
+ * @param {Object} req - The HTTP request object containing an image file in the `file` property.
+ * {
+ *  file: Buffer
+ * }
+ * @param {Object} res - The HTTP response object.
+ * @returns {Array} An array of objects with `id` and `coordinates` properties.
+ *
+ * @example
+ * // Sample output
+ * [
+ *   {
+ *     id: 0,
+ *     coordinates: [
+ *       [x1, y1],
+ *       [x2, y2],
+ *       [x3, y3],
+ *       [x4, y4],
+ *     ],
+ *   },
+ *   // ...
+ * ]
+ */
+
 const extractRectCoord = async (req, res) => {
   try {
     if (!req.file || !req.file.buffer) {
